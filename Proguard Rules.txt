@@ -1,0 +1,150 @@
+Proguard Rules
+
+
+1. Spring Rest Template Rules
+
+##  KEEP ANDROID Spring Rest Template 
+
+	-keep class * implements android.os.Parcelable {
+	  public static final android.os.Parcelable$Creator *;
+	}
+
+	-keepclassmembers public class org.springframework {
+		public *;
+	}
+
+	-keep class org.springframework.**
+	-keep class org.springframework.*
+	-keepnames class org.springframework.*
+	-keepclassmembers class org.springframework.*
+	-keepclassmembers enum org.springframework.*
+	-keepclassmembers interface org.springframework.*
+
+	-keep public class org.springframework.http.converter.json.MappingJackson2HttpMessageConverter.** { *; }
+	-dontwarn org.springframework.http.client.**
+	-dontwarn org.springframework.http.converter.feed.**
+	-dontwarn org.springframework.http.converter.json.**
+	-dontwarn org.springframework.http.converter.xml.**
+
+
+2. UI Rules
+
+##  KEEP ANDROID SUPPORT V7 AND DESIGN
+
+	-dontwarn android.support.design.**
+	-keep class android.support.design.** { *; }
+	-keep interface android.support.design.** { *; }
+	-keep public class android.support.design.R$* { *; }
+
+	-keep public class android.support.v7.widget.** { *; }
+	-keep public class android.support.v7.internal.widget.** { *; }
+	-keep public class android.support.v7.internal.view.menu.** { *; }
+
+	-keep public class * extends android.support.v4.view.ActionProvider {
+		public <init>(android.content.Context);
+	}
+
+	-keep interface android.support.v4.** { *; }
+	-keep interface android.support.v7.** { *; }
+	-keep class android.support.** { *; }
+
+
+
+3. JSON/Jackson Rules
+
+Use @Keep for all of the Model Classes
+Use @Keep for all of the DTO Classes
+
+If you will not use @Keep then Get and Post APIS should not work and will give error
+
+# Jackson Converter
+	-keep public class com.fasterxml.jackson.** { *; }
+    -dontwarn com.google.code.rome.android.repackaged.**
+    -dontwarn com.fasterxml.jackson.databind.**
+    -dontwarn org.simpleframework.xml.**
+    -dontwarn org.apache.commons.**
+    -keepnames class com.fasterxml.jackson.* { *; }
+	-keep class sun.misc.Unsafe { *; }
+	-keep class com.google.gson.stream.** { *; }
+
+
+
+
+4. General Classes Attributes
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+
+5. Others
+
+# Picasso rules
+-dontwarn com.squareup.okhttp.**
+
+# So that Fabric can still have line numbers
+-keepattributes SourceFile,LineNumberTable
+
+# Retrofit rules
+-keep class com.squareup.okhttp.** { *; }
+-keep class retrofit.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+#  ORG.APACHE.HTTP
+-keep class org.apache.http.**
+-keep interface org.apache.http.**
+-dontwarn org.apache.**
+
+# WEBVIEW
+
+-keep public class android.net.http.SslError
+-keep public class android.webkit.WebViewClient
+-dontwarn android.webkit.WebView
+-dontwarn android.net.http.SslError
+-dontwarn android.webkit.WebViewClient
+
+
+-keep class * extends java.util.ListResourceBundle {
+    protected java.lang.Object[][] getContents();
+}
+
+# Keep SafeParcelable value, needed for reflection. This is required to support backwards
+# compatibility of some classes.
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+# Keep the names of classes/members we need for client functionality.
+-keep @interface com.google.android.gms.common.annotation.KeepName
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+# Needed for Parcelable/SafeParcelable Creators to not get stripped
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+# Needed when building against pre-Marshmallow SDK.
+-dontwarn android.security.NetworkSecurityPolicy
+
+# Keep metadata about included modules.
+-keep public class com.google.android.gms.dynamite.descriptors.** {
+  public <fields>;
+}
+
+# Keep the implementation of the flags api for google-play-services-flags
+
+-keep public class com.google.android.gms.flags.impl.FlagProviderImpl {
+  public <fields>; public <methods>;
+}
